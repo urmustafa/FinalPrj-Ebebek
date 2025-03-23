@@ -85,6 +85,16 @@ $(document).ready(function() {
                 cursor: pointer;
             }
 
+            .add-to-cart-button {
+                background-color: #f0f0f0;
+                border: none;
+                padding: 10px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 10px;
+                color: #0038AE;
+            }
+
             @media (max-width: 1024px) {
                 .product-card {
                     flex: 0 0 32%;
@@ -130,7 +140,11 @@ $(document).ready(function() {
         return favorites;
     }
 
-   
+    function getCartProducts() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        return cart;
+    }
+
     function updateFavoriteStatus(productId, isFavorite) {
         const favorites = getFavoriteProducts();
         //console.log("Favoriler güncelleniyor:", favorites, "Ürün ID:", productId, "Durum:", isFavorite);
@@ -150,12 +164,20 @@ $(document).ready(function() {
         localStorage.setItem('favorites', JSON.stringify(favorites));
     }
 
- 
+    function updateCartStatus(productId) {
+        const cart = getCartProducts();
+        if (!cart.includes(productId)) {
+            cart.push(productId);
+            console.log("Ürün sepete ekleniyor:", productId);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
     function fetchProducts() {
         const products = JSON.parse(localStorage.getItem('products'));
         console.log("Ürünler alınıyor...");
         if (products != null) {
-           // console.log("LocalStorage'dan ürünler alındı.");
+            // console.log("LocalStorage'dan ürünler alındı.");
             return Promise.resolve(products);
         } else {
             return $.get('https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json')
@@ -170,7 +192,6 @@ $(document).ready(function() {
                 });
         }
     }
-
 
     function createCarousel(products) {
         if (!Array.isArray(products)) {
@@ -197,6 +218,7 @@ $(document).ready(function() {
                                 <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181"/>
                             </svg>
                         </button>
+                        <button class="add-to-cart-button" data-product-id="${product.id}">Sepete Ekle</button>
                     </div>
                 </div>
             `);
@@ -210,7 +232,6 @@ $(document).ready(function() {
 
         $carouselContainer.append($carouselInner, $carouselNavigation);
 
-
         const $carousel = $('.carousel-inner');
         $prevButtonNav.on('click', function() {
             $carousel.animate({ scrollLeft: '-=300px' }, 300);
@@ -220,10 +241,8 @@ $(document).ready(function() {
             $carousel.animate({ scrollLeft: '+=300px' }, 300);
         });
 
-
         $('.Section2A.has-components').before($carouselContainer);
     }
-
 
     function displayPrice(product) {
         let priceHtml = `<p>${product.price}₺</p>`;
@@ -244,6 +263,12 @@ $(document).ready(function() {
         const productId = $(this).data('product-id');
         console.log("Favori butonuna tıklanıyor:", productId);
         toggleFavoriteButton(productId);
+    });
+
+    $(document).on('click', '.add-to-cart-button', function() {
+        const productId = $(this).data('product-id');
+        console.log("Sepete ekleme butonuna tıklanıyor:", productId);
+        updateCartStatus(productId);
     });
 
     function toggleFavoriteButton(productId) {
