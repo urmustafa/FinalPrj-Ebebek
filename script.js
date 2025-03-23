@@ -1,7 +1,4 @@
 $(document).ready(function() {
-    //console.log("CSS ekleniyor...");
-    
-
     function checkIfHomepage() {
         if (window.location.pathname !== "/") {
             console.log("wrong page");
@@ -11,7 +8,6 @@ $(document).ready(function() {
     }
 
     if (!checkIfHomepage()) return;
-
 
     function addCSS() {
         const style = document.createElement('style');
@@ -58,6 +54,10 @@ $(document).ready(function() {
                 border-radius: 10px;
             }
 
+            .product-card h3 {
+                color: black;
+            }
+
             .heart-icon {
                 position: absolute;
                 top: 10px;
@@ -68,7 +68,7 @@ $(document).ready(function() {
             }
 
             .heart-icon.filled {
-                color: #1e90ff;
+                color: orange !important;
             }
 
             .carousel-navigation {
@@ -93,6 +93,54 @@ $(document).ready(function() {
                 cursor: pointer;
                 margin-top: 10px;
                 color: #0038AE;
+                border-radius: 18px;
+                color: orange;
+            }
+
+            .discount-price {
+                color: green;
+                font-size: 18px;
+            }
+
+            .original-price {
+                text-decoration: line-through;
+                color: red;
+                font-size: 18px;
+            }
+
+            .product-card p {
+                font-size: 18px;
+            }
+
+            /* Yeni stil eklemeleri */
+            .carousel-container h2 {
+                background-color: #FEF6EB; /* Yeni arka plan rengi */
+                padding: 15px 30px; /* Yüksekliği artırdım ve sol boşluk ekledim */
+                font-size: 24px;
+                font-weight: bold;
+                text-align: left; /* Metni sola yasla */
+                color: #F28E00; /* Yeni yazı rengi */
+                border-radius: 15px 15px 0 0; /* Sadece üst köşelere yuvarlak köşe */
+                margin: 0;
+                border-left: 2px solid #F28E00; /* Sol kenarda çizgi */
+                border-right: 2px solid #F28E00; /* Sağ kenarda çizgi */
+            }
+
+            .star-rating {
+                display: flex;
+                gap: 5px;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .star {
+                font-size: 24px;
+                color: #ccc;
+                cursor: pointer;
+            }
+
+            .star.filled {
+                color: gold;
             }
 
             @media (max-width: 1024px) {
@@ -133,10 +181,8 @@ $(document).ready(function() {
 
     addCSS();
 
-
     function getFavoriteProducts() {
         const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        //console.log("Favori ürünler alınıyor...", favorites);
         return favorites;
     }
 
@@ -147,7 +193,6 @@ $(document).ready(function() {
 
     function updateFavoriteStatus(productId, isFavorite) {
         const favorites = getFavoriteProducts();
-        //console.log("Favoriler güncelleniyor:", favorites, "Ürün ID:", productId, "Durum:", isFavorite);
         if (isFavorite) {
             if (!favorites.includes(productId)) {
                 favorites.push(productId);
@@ -160,7 +205,6 @@ $(document).ready(function() {
                 console.log("Favori ürün çıkarılıyor:", productId);
             }
         }
-        console.log("Yeni favoriler:", favorites);
         localStorage.setItem('favorites', JSON.stringify(favorites));
     }
 
@@ -175,14 +219,11 @@ $(document).ready(function() {
 
     function fetchProducts() {
         const products = JSON.parse(localStorage.getItem('products'));
-        console.log("Ürünler alınıyor...");
         if (products != null) {
-            // console.log("LocalStorage'dan ürünler alındı.");
             return Promise.resolve(products);
         } else {
             return $.get('https://gist.githubusercontent.com/sevindi/8bcbde9f02c1d4abe112809c974e1f49/raw/9bf93b58df623a9b16f1db721cd0a7a539296cf0/products.json')
                 .then(data => {
-                    console.log("Ürünler API'den alındı.");
                     localStorage.setItem('products', JSON.stringify(data));
                     return data;
                 })
@@ -197,14 +238,12 @@ $(document).ready(function() {
         if (!Array.isArray(products)) {
             return;
         }
-        console.log("Ürünler alındı ve karusel oluşturuluyor...");
         const $carouselContainer = $('<div class="carousel-container"></div>');
         const $title = $('<h2>Beğenebileceğinizi düşündüklerimiz</h2>');
         $carouselContainer.append($title);
         const $carouselInner = $('<div class="carousel-inner"></div>');
 
         products.slice(0, products.length).forEach(product => {
-            console.log("Ürün kartı oluşturuluyor:", product);
             const $productCard = $(`
                 <div class="product-card">
                     <a href="${product.url}" target="_blank">
@@ -213,6 +252,13 @@ $(document).ready(function() {
                     </a>
                     <div class="card-footer">
                         ${displayPrice(product)}
+                        <div class="star-rating" data-product-id="${product.id}">
+                            <span class="star ${product.rating >= 1 ? 'filled' : ''}">★</span>
+                            <span class="star ${product.rating >= 2 ? 'filled' : ''}">★</span>
+                            <span class="star ${product.rating >= 3 ? 'filled' : ''}">★</span>
+                            <span class="star ${product.rating >= 4 ? 'filled' : ''}">★</span>
+                            <span class="star ${product.rating >= 5 ? 'filled' : ''}">★</span>
+                        </div>
                         <button class="favorite-button" data-product-id="${product.id}">
                             <svg class="heart-icon ${isFavorite(product.id) ? 'filled' : ''}" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181"/>
@@ -245,37 +291,63 @@ $(document).ready(function() {
     }
 
     function displayPrice(product) {
-        let priceHtml = `<p>${product.price}₺</p>`;
+        let priceHtml = `<p class="price">${product.price}₺</p>`;
         if (product.price !== product.original_price) {
-            const discount = product.original_price - product.price;
-            priceHtml += `<p><strike>${product.original_price}₺</strike> ${discount}₺ İndirim</p>`;
+            priceHtml = `<p class="original-price">${product.original_price}₺</p>
+                         <p class="discount-price">${product.price}₺</p>`;
         }
         return priceHtml;
     }
 
     function isFavorite(productId) {
         const favorites = getFavoriteProducts();
-        console.log("Favori kontrol ediliyor:", productId);
         return favorites.includes(productId);
     }
 
     $(document).on('click', '.favorite-button', function() {
         const productId = $(this).data('product-id');
-        console.log("Favori butonuna tıklanıyor:", productId);
         toggleFavoriteButton(productId);
     });
 
     $(document).on('click', '.add-to-cart-button', function() {
         const productId = $(this).data('product-id');
-        console.log("Sepete ekleme butonuna tıklanıyor:", productId);
         updateCartStatus(productId);
+    });
+
+    $(document).on('click', '.star', function() {
+        const $stars = $(this).parent().find('.star');
+        const index = $stars.index($(this)) + 1;
+        const productId = $(this).parent().data('product-id');
+
+        $stars.removeClass('filled');
+        $stars.slice(0, index).addClass('filled');
+
+       
+        updateRating(productId, index);
     });
 
     function toggleFavoriteButton(productId) {
         const $button = $(`[data-product-id="${productId}"]`);
-        const isFavorite = $button.find('.heart-icon').hasClass('filled');
-        $button.find('.heart-icon').toggleClass('filled', !isFavorite);
+        const $heartIcon = $button.find('.heart-icon');
+        const isFavorite = $heartIcon.hasClass('filled');
+
+       
+        $heartIcon.toggleClass('filled', !isFavorite);
+
+       
+        if (!isFavorite) {
+            $heartIcon.css('color', 'orange'); 
+        } else {
+            $heartIcon.css('color', ''); 
+        }
+
+        
         updateFavoriteStatus(productId, !isFavorite);
+    }
+
+    function updateRating(productId, rating) {
+       
+        console.log(`Ürün ID: ${productId}, Yeni Puan: ${rating}`);
     }
 
     fetchProducts().then(products => {
