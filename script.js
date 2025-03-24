@@ -18,7 +18,7 @@ $(document).ready(function() {
                 text-align: center;
                 font-family: Arial, sans-serif;
                 position: relative;
-                padding: 0 10px; /* İç boşluk ekledim */
+                padding: 0 10px;
             }
 
             .carousel-inner {
@@ -40,7 +40,7 @@ $(document).ready(function() {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
-                margin: 0 5px; /* Ürün kartları arasında boşluk */
+                margin: 0 5px;
             }
 
             .product-card:hover {
@@ -62,9 +62,9 @@ $(document).ready(function() {
 
             .product-card h3 {
                 color: black;
-                font-family: Poppins, "cursive"; /* Font düzenlemesi */
-                padding: 5px; /* İç boşluk ekledim */
-                color: #7d7d7d; /* Yazı rengi */
+                font-family: Poppins, "cursive";
+                padding: 5px;
+                color: #7d7d7d;
             }
 
             .heart-icon {
@@ -72,12 +72,15 @@ $(document).ready(function() {
                 top: 10px;
                 right: 10px;
                 font-size: 24px;
-                color: #ccc;
+                color: orange !important;
                 cursor: pointer;
             }
 
             .heart-icon.filled {
                 color: orange !important;
+            }
+            .heart-icon.filled path {
+                fill: orange !important;
             }
 
             .carousel-navigation {
@@ -126,14 +129,14 @@ $(document).ready(function() {
 
             .product-card p {
                 font-size: 18px;
-                font-family: Poppins, "cursive"; /* Font düzenlemesi */
-                padding: 5px; /* İç boşluk ekledim */
-                color: #7d7d7d; /* Yazı rengi */
+                font-family: Poppins, "cursive";
+                padding: 5px;
+                color: #7d7d7d;
             }
 
             .carousel-container h2 {
                 background-color: #FEF6EB;
-                padding: 15px 30px;
+                padding: 20px 30px;
                 font-size: 24px;
                 font-weight: bold;
                 text-align: left;
@@ -142,9 +145,9 @@ $(document).ready(function() {
                 margin: 0;
                 border-left: 2px solid #F28E00;
                 border-right: 2px solid #F28E00;
-                font-family: Poppins, "cursive"; /* Font düzenlemesi */
-                padding: 5px; /* İç boşluk ekledim */
-                color: #7d7d7d; /* Yazı rengi */
+                font-family: Poppins, "cursive";
+                color: #7d7d7d;
+                margin-bottom: 15px;
             }
 
             .star-rating {
@@ -260,7 +263,7 @@ $(document).ready(function() {
             return;
         }
         const $carouselContainer = $('<div class="carousel-container"></div>');
-        const $title = $('<h2>Beğenebileceğinizi düşündüklerimiz</h2>');
+        const $title = $('<h2>Beğenebileceğinizi Düşündüklerimiz</h2>');
         $title.css({
         'font-family': 'Poppins, "cursive"',
         'font-size': '3rem',
