@@ -17,12 +17,16 @@ $(document).ready(function() {
                 margin: 20px 0;
                 text-align: center;
                 font-family: Arial, sans-serif;
+                position: relative;
+                padding: 0 10px; /* İç boşluk ekledim */
             }
+
             .carousel-inner {
                 display: flex;
                 overflow: hidden;
                 scroll-behavior: smooth;
                 gap: 10px;
+                transition: transform 0.3s ease;
             }
 
             .product-card {
@@ -36,10 +40,12 @@ $(document).ready(function() {
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
+                margin: 0 5px; /* Ürün kartları arasında boşluk */
             }
 
             .product-card:hover {
                 transform: scale(1.05);
+                border: 3px solid #F28E00;
             }
 
             .product-card a {
@@ -56,6 +62,9 @@ $(document).ready(function() {
 
             .product-card h3 {
                 color: black;
+                font-family: Poppins, "cursive"; /* Font düzenlemesi */
+                padding: 5px; /* İç boşluk ekledim */
+                color: #7d7d7d; /* Yazı rengi */
             }
 
             .heart-icon {
@@ -72,9 +81,13 @@ $(document).ready(function() {
             }
 
             .carousel-navigation {
+                position: absolute;
+                top: 50%;
+                width: 100%;
                 display: flex;
                 justify-content: space-between;
-                margin-top: 10px;
+                transform: translateY(-50%);
+                z-index: 1;
             }
 
             .prev-button, .next-button {
@@ -83,6 +96,9 @@ $(document).ready(function() {
                 padding: 10px;
                 font-size: 16px;
                 cursor: pointer;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
             }
 
             .add-to-cart-button {
@@ -98,7 +114,7 @@ $(document).ready(function() {
             }
 
             .discount-price {
-                color: green;
+                color: green !important;
                 font-size: 18px;
             }
 
@@ -110,20 +126,25 @@ $(document).ready(function() {
 
             .product-card p {
                 font-size: 18px;
+                font-family: Poppins, "cursive"; /* Font düzenlemesi */
+                padding: 5px; /* İç boşluk ekledim */
+                color: #7d7d7d; /* Yazı rengi */
             }
 
-            /* Yeni stil eklemeleri */
             .carousel-container h2 {
-                background-color: #FEF6EB; /* Yeni arka plan rengi */
-                padding: 15px 30px; /* Yüksekliği artırdım ve sol boşluk ekledim */
+                background-color: #FEF6EB;
+                padding: 15px 30px;
                 font-size: 24px;
                 font-weight: bold;
-                text-align: left; /* Metni sola yasla */
-                color: #F28E00; /* Yeni yazı rengi */
-                border-radius: 15px 15px 0 0; /* Sadece üst köşelere yuvarlak köşe */
+                text-align: left;
+                color: #F28E00;
+                border-radius: 15px 15px 0 0;
                 margin: 0;
-                border-left: 2px solid #F28E00; /* Sol kenarda çizgi */
-                border-right: 2px solid #F28E00; /* Sağ kenarda çizgi */
+                border-left: 2px solid #F28E00;
+                border-right: 2px solid #F28E00;
+                font-family: Poppins, "cursive"; /* Font düzenlemesi */
+                padding: 5px; /* İç boşluk ekledim */
+                color: #7d7d7d; /* Yazı rengi */
             }
 
             .star-rating {
@@ -240,6 +261,13 @@ $(document).ready(function() {
         }
         const $carouselContainer = $('<div class="carousel-container"></div>');
         const $title = $('<h2>Beğenebileceğinizi düşündüklerimiz</h2>');
+        $title.css({
+        'font-family': 'Poppins, "cursive"',
+        'font-size': '3rem',
+        'font-weight': '700',
+        'line-height': '1.11',
+        'color': '#f28e00'
+        });
         $carouselContainer.append($title);
         const $carouselInner = $('<div class="carousel-inner"></div>');
 
@@ -278,7 +306,7 @@ $(document).ready(function() {
 
         $carouselContainer.append($carouselInner, $carouselNavigation);
 
-        const $carousel = $('.carousel-inner');
+        const $carousel = $carouselInner;
         $prevButtonNav.on('click', function() {
             $carousel.animate({ scrollLeft: '-=300px' }, 300);
         });
@@ -322,7 +350,6 @@ $(document).ready(function() {
         $stars.removeClass('filled');
         $stars.slice(0, index).addClass('filled');
 
-       
         updateRating(productId, index);
     });
 
@@ -331,22 +358,11 @@ $(document).ready(function() {
         const $heartIcon = $button.find('.heart-icon');
         const isFavorite = $heartIcon.hasClass('filled');
 
-       
         $heartIcon.toggleClass('filled', !isFavorite);
-
-       
-        if (!isFavorite) {
-            $heartIcon.css('color', 'orange'); 
-        } else {
-            $heartIcon.css('color', ''); 
-        }
-
-        
         updateFavoriteStatus(productId, !isFavorite);
     }
 
     function updateRating(productId, rating) {
-       
         console.log(`Ürün ID: ${productId}, Yeni Puan: ${rating}`);
     }
 
